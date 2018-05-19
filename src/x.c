@@ -496,27 +496,40 @@ void x_draw_decoration(Con *con) {
 
         Rect br = con_border_style_rect(con);
 
+
+        struct BR2 {
+            int size;
+        } br2;
+        br2.size = br.x/2;
+
         /* These rectangles represent the border around the child window
          * (left, bottom and right part). We don’t just fill the whole
          * rectangle because some childs are not freely resizable and we want
          * their background color to "shine through". */
         if (!(borders_to_hide & ADJ_LEFT_SCREEN_EDGE)) {
-            draw_util_rectangle(&(con->frame_buffer), p->color->child_border, 0, 0, br.x, r->height);
+            draw_util_rectangle(&(con->frame_buffer),
+                                p->color->child_border,
+                                br2.size, br2.size,
+                                br2.size, r->height - br2.size*2);
         }
         if (!(borders_to_hide & ADJ_RIGHT_SCREEN_EDGE)) {
             draw_util_rectangle(&(con->frame_buffer),
-                                p->color->child_border, r->width + (br.width + br.x), 0,
-                                -(br.width + br.x), r->height);
+                                p->color->child_border,
+                                r->width - br2.size*2, br2.size,
+                                br2.size, r->height - br2.size*2);
         }
         if (!(borders_to_hide & ADJ_LOWER_SCREEN_EDGE)) {
             draw_util_rectangle(&(con->frame_buffer),
-                                p->color->child_border, br.x, r->height + (br.height + br.y),
-                                r->width + br.width, -(br.height + br.y));
+                                p->color->child_border,
+                                br.x, r->height - br2.size,
+                                r->width + br.width, -br2.size);
         }
         /* pixel border needs an additional line at the top */
         if (p->border_style == BS_PIXEL && !(borders_to_hide & ADJ_UPPER_SCREEN_EDGE)) {
             draw_util_rectangle(&(con->frame_buffer),
-                                p->color->child_border, br.x, 0, r->width + br.width, br.y);
+                                p->color->child_border,
+                                br.x, br2.size,
+                                r->width + br.width, br2.size);
         }
 
         /* Highlight the side of the border at which the next window will be
@@ -526,12 +539,25 @@ void x_draw_decoration(Con *con) {
         if (TAILQ_NEXT(con, nodes) == NULL &&
             TAILQ_PREV(con, nodes_head, nodes) == NULL &&
             con->parent->type != CT_FLOATING_CON) {
+
+            int one_third = 0;
+
             if (p->parent_layout == L_SPLITH) {
-                draw_util_rectangle(&(con->frame_buffer), p->color->indicator,
-                                    r->width + (br.width + br.x), br.y, -(br.width + br.x), r->height + br.height);
+
+                one_third = r->height / 3;
+
+                draw_util_rectangle(&(con->frame_buffer),
+                                    p->color->indicator,
+                                    r->width - br2.size*2, one_third,
+                                    br2.size, one_third);
             } else if (p->parent_layout == L_SPLITV) {
-                draw_util_rectangle(&(con->frame_buffer), p->color->indicator,
-                                    br.x, r->height + (br.height + br.y), r->width + br.width, -(br.height + br.y));
+
+                one_third = r->width / 3;
+
+                draw_util_rectangle(&(con->frame_buffer),
+                                    p->color->indicator,
+                                    one_third, r->height - br2.size,
+                                    one_third, -br2.size);
             }
         }
     }
