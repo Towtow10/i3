@@ -20,11 +20,11 @@ As you might caught on, this leaves no ability to have old "one border" look
 with this fork. This why I call it quick and dirty :)
 
 # Installation
-```
+```bash
 cd /path/where/you/want/the/repository
 
 # clone the repository
-git clone https://www.github.com/Airblader/i3 i3-gaps
+git clone https://www.github.com/max-lv/i3 i3-gaps
 cd i3-gaps
 
 # compile & install
