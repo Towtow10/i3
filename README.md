@@ -18,3 +18,44 @@ background color.
 
 As you might caught on, this leaves no ability to have old "one border" look
 with this fork. This why I call it quick and dirty :)
+
+# Installation
+```
+cd /path/where/you/want/the/repository
+
+# clone the repository
+git clone https://www.github.com/Airblader/i3 i3-gaps
+cd i3-gaps
+
+# compile & install
+autoreconf --force --install
+rm -rf build/
+mkdir -p build && cd build/
+
+# Disabling sanitizers is important for release versions!
+# The prefix and sysconfdir are, obviously, dependent on the distribution.
+../configure --prefix=/usr --sysconfdir=/etc --disable-sanitizers
+make
+sudo make install
+```
+## Arch Aur Package
+https://aur.archlinux.org/packages/i3-gaps-doubleborder/
+```
+yay -S i3-gaps-doubleborder
+```
+
+# Dependancies
+* libdev
+* libxkbcommon-x11
+* pango
+* perl
+* startup-notification
+* xcb-util-cursor
+* xcb-util-keysyms
+* xcb-util-wm
+* xcb-util-xrm
+* yajl
+* asciidoc (make)
+* bison (make)
+* flex (make)
+* xmlto (make)
